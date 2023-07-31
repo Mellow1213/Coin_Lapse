@@ -21,14 +21,16 @@ public class PlayerMovement : MonoBehaviour
     public GameObject temp_FireParticle;
 
     public GameObject muzzle;
-    
-    
+
+    public GameObject gun;
+    [SerializeField] private GameObject currentWeapon;
     
     // Start is called before the first frame update
     void Start()
     {
         _camera = Camera.main;
         characterController = GetComponent<CharacterController>();
+        currentWeapon = gun.transform.GetChild(0).GetComponent<Transform>().gameObject;
     }
 
     float gravity = -3.8f;
