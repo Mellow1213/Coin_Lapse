@@ -31,7 +31,7 @@ public class PlayerMovement : MonoBehaviour
         characterController = GetComponent<CharacterController>();
     }
 
-    float gravity = -9.8f;
+    float gravity = -3.8f;
     float yVelocity = 0;
     private Camera _camera;
 
@@ -54,6 +54,9 @@ public class PlayerMovement : MonoBehaviour
         {
             delayTimer = 0f;
             
+            GameObject fireParticle = Instantiate(temp_FireParticle, muzzle.transform.position, muzzle.transform.rotation);
+            fireParticle.transform.parent = _camera.transform;
+            
             RaycastHit hit; 
             // Create a ray that goes through the center of the screen
             Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width/2, Screen.height/2));
@@ -61,8 +64,6 @@ public class PlayerMovement : MonoBehaviour
             if (Physics.Raycast(ray, out hit, range))
             {
                 Instantiate(temp_Particle, hit.point, Quaternion.identity);
-                GameObject fireParticle = Instantiate(temp_FireParticle, muzzle.transform.position, muzzle.transform.rotation);
-                fireParticle.transform.parent = _camera.transform;
                 if (hit.transform.CompareTag("Enemy"))
                 {
                     Debug.Log("hit name: " + hit.transform.name); // Output the name of the object we hit
