@@ -69,6 +69,9 @@ public class PlayerMovement : MonoBehaviour
                 if (hit.transform.CompareTag("Enemy"))
                 {
                     Debug.Log("hit name: " + hit.transform.name); // Output the name of the object we hit
+                    Health health = hit.transform.GetComponent<Health>();
+                    if(health != null)
+                        health.Damage(currentWeapon.GetComponent<GunProperty>().damage);
                 }
                 
                 // Here you can implement the effects of the shooting, for example:
