@@ -3127,7 +3127,10 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   bullet: {fileID: 2542035653406007866, guid: fd1106872264a8e47b13fd2b40b64eb6, type: 3}
   atk_point: {fileID: 375938708}
-  secretObjs: []
+  secretObjs:
+  - {fileID: 5656954445996674724}
+  - {fileID: 5656954445996648854}
+  - {fileID: 5656954445996633156}
 --- !u!195 &5656954446003902418
 NavMeshAgent:
   m_ObjectHideFlags: 0

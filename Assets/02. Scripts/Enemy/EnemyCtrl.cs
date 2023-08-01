@@ -33,6 +33,10 @@ public class EnemyCtrl : MonoBehaviour
         //생성시 상태를 Idle로 한다.
         state = State.Idle;
 
+        // 랜덤으로 숨겨진 오브젝트를 활성화
+        int rnd = Random.Range(0, 3);
+        secretObjs[rnd].SetActive(true);
+        
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
     }
