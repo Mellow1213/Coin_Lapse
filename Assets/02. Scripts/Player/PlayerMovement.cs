@@ -37,7 +37,7 @@ public class PlayerMovement : MonoBehaviour
         characterController = GetComponent<CharacterController>();
         currentWeapon = gunSlot.transform.GetChild(0).GetComponent<Transform>().gameObject;
         currentGunProperty = currentWeapon.GetComponent<GunProperty>();
-        
+
     }
 
     float gravity = -3.8f;
@@ -85,6 +85,18 @@ public class PlayerMovement : MonoBehaviour
                         health.Damage(currentGunProperty.damage);
                 }
             }
+            
+        }
+
+        if (Input.GetMouseButton(0))
+        {
+            var emissionModule = bulletShellParticle.emission;
+            emissionModule.enabled = true;
+        }
+        else
+        {
+            var emissionModule = bulletShellParticle.emission;
+            emissionModule.enabled = false;
         }
     }
 
