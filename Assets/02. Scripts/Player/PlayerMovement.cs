@@ -20,7 +20,6 @@ public class PlayerMovement : MonoBehaviour
     private float delayTimer = 0f;
 
     public GameObject temp_Particle;
-    public GameObject temp_FireParticle;
 
     public GameObject muzzle;
 
@@ -28,6 +27,9 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject currentWeapon;
     private GunProperty currentGunProperty;
 
+    [SerializeField] private float currentFireDelay;
+
+    public ParticleSystem muzzleFlashParticle;
     public ParticleSystem bulletShellParticle;
 
     // Start is called before the first frame update
@@ -38,6 +40,7 @@ public class PlayerMovement : MonoBehaviour
         currentWeapon = gunSlot.transform.GetChild(0).GetComponent<Transform>().gameObject;
         currentGunProperty = currentWeapon.GetComponent<GunProperty>();
 
+        currentFireDelay = currentGunProperty.delay;
     }
 
     float gravity = -3.8f;
@@ -49,28 +52,62 @@ public class PlayerMovement : MonoBehaviour
     {
         Movement();
         Fire();
+        GoldUpgrade();
+    }
+
+    void GoldUpgrade()
+    {
+        currentFireDelay = Mathf.Clamp(currentGunProperty.delay / (GameManager.Instance.gold * 0.005f), 0.001f, 0.15f);
+        Debug.Log("currentFireDelay = " + currentFireDelay);
+
+        if (currentFireDelay < 0.025f)
+        {
+            var emissionModule = bulletShellParticle.emission;
+            emissionModule.rateOverTime = 12;
+        }
+        else if (currentFireDelay < 0.03f)
+        {
+            var emissionModule = bulletShellParticle.emission;
+            emissionModule.rateOverTime = 8;
+            
+        }
+        else if (currentFireDelay < 0.035f)
+        {
+            var emissionModule = bulletShellParticle.emission;
+            emissionModule.rateOverTime = 6;
+            
+        }
+        else if (currentFireDelay < 0.04f)
+        {
+            var emissionModule = bulletShellParticle.emission;
+            emissionModule.rateOverTime = 4;
+            
+        }
+        else
+        {
+            var emissionModule = bulletShellParticle.emission;
+            emissionModule.rateOverTime = 2;
+            
+        }
     }
 
     void Fire()
     {
-        if (delayTimer <= currentGunProperty.delay)
+        if (delayTimer <= currentFireDelay)
         {
             delayTimer += Time.deltaTime;
         }
 
 
-        if (Input.GetMouseButton(0) && delayTimer >= currentGunProperty.delay && GameManager.Instance.gold >= 0)
+        if (Input.GetMouseButton(0) && delayTimer >= currentFireDelay && GameManager.Instance.gold >= 0)
         {
             delayTimer = 0f;
 
-            GameObject fireParticle =
-                Instantiate(temp_FireParticle, muzzle.transform.position, muzzle.transform.rotation);
-            fireParticle.transform.parent = currentWeapon.transform;
 
             GameManager.Instance.gold -= currentGunProperty.cost;
 
             RecoilAnim();
-            
+
             RaycastHit hit;
             // Create a ray that goes through the center of the screen
             Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
@@ -85,24 +122,42 @@ public class PlayerMovement : MonoBehaviour
                         health.Damage(currentGunProperty.damage);
                 }
             }
-            
         }
 
         if (Input.GetMouseButton(0))
         {
-            var emissionModule = bulletShellParticle.emission;
-            emissionModule.enabled = true;
+            if (GameManager.Instance.gold >= 0)
+            {
+                var bulletModule = bulletShellParticle.emission;
+                bulletModule.enabled = true;
+
+                var flashModule = muzzleFlashParticle.emission;
+                flashModule.enabled = true;
+            }
+            else
+            {
+                var bulletModule = bulletShellParticle.emission;
+                bulletModule.enabled = false;
+
+                var flashModule = muzzleFlashParticle.emission;
+                flashModule.enabled = false;
+            }
         }
         else
         {
-            var emissionModule = bulletShellParticle.emission;
-            emissionModule.enabled = false;
+            var bulletModule = bulletShellParticle.emission;
+            bulletModule.enabled = false;
+
+            var flashModule = muzzleFlashParticle.emission;
+            flashModule.enabled = false;
         }
     }
 
     void RecoilAnim()
     {
-        currentWeapon.transform.DOLocalMoveZ(currentWeapon.transform.localPosition.z-currentGunProperty.recoilDistance, currentGunProperty.delay*0.25f, false).SetEase(Ease.OutCirc).SetLoops(2, LoopType.Yoyo);
+        currentWeapon.transform
+            .DOLocalMoveZ(currentWeapon.transform.localPosition.z - currentGunProperty.recoilDistance,
+                currentFireDelay * 0.5f, false).SetEase(Ease.OutCirc).SetLoops(2, LoopType.Yoyo);
     }
 
     void Movement()
