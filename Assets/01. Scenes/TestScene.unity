@@ -1042,7 +1042,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 6ca55a25c03f194498d38011923bc75e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  gold: 100
+  gold: 1000
 --- !u!4 &1385595858
 Transform:
   m_ObjectHideFlags: 0
@@ -1681,6 +1681,26 @@ PrefabInstance:
   m_Modification:
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1760289654371270881, guid: b63997cb8d80a4f4f9a34a827767541b,
+        type: 3}
+      propertyPath: m_IsActive
+      value: 1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6148671350204111605, guid: b63997cb8d80a4f4f9a34a827767541b,
+        type: 3}
+      propertyPath: m_LocalPosition.z
+      value: 0.058
+      objectReference: {fileID: 0}
+    - target: {fileID: 6148671351260068785, guid: b63997cb8d80a4f4f9a34a827767541b,
+        type: 3}
+      propertyPath: delay
+      value: 0.1
+      objectReference: {fileID: 0}
+    - target: {fileID: 6148671351260068785, guid: b63997cb8d80a4f4f9a34a827767541b,
+        type: 3}
+      propertyPath: recoilDistance
+      value: 0.01
+      objectReference: {fileID: 0}
     - target: {fileID: 6148671351852587476, guid: b63997cb8d80a4f4f9a34a827767541b,
         type: 3}
       propertyPath: m_Name

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
+using DG.Tweening;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -15,7 +16,6 @@ public class PlayerMovement : MonoBehaviour
 
 
     public float range = 100.0f;
-    public float fireDelay = 0.1f;
 
     private float delayTimer = 0f;
 
@@ -24,17 +24,20 @@ public class PlayerMovement : MonoBehaviour
 
     public GameObject muzzle;
 
-    public GameObject gun;
+    public GameObject gunSlot;
     [SerializeField] private GameObject currentWeapon;
     private GunProperty currentGunProperty;
+
+    public ParticleSystem bulletShellParticle;
 
     // Start is called before the first frame update
     void Start()
     {
         _camera = Camera.main;
         characterController = GetComponent<CharacterController>();
-        currentWeapon = gun.transform.GetChild(0).GetComponent<Transform>().gameObject;
+        currentWeapon = gunSlot.transform.GetChild(0).GetComponent<Transform>().gameObject;
         currentGunProperty = currentWeapon.GetComponent<GunProperty>();
+        
     }
 
     float gravity = -3.8f;
@@ -50,22 +53,24 @@ public class PlayerMovement : MonoBehaviour
 
     void Fire()
     {
-        if (delayTimer <= fireDelay)
+        if (delayTimer <= currentGunProperty.delay)
         {
             delayTimer += Time.deltaTime;
         }
 
 
-        if (Input.GetMouseButton(0) && delayTimer >= fireDelay && GameManager.Instance.gold >= 0)
+        if (Input.GetMouseButton(0) && delayTimer >= currentGunProperty.delay && GameManager.Instance.gold >= 0)
         {
             delayTimer = 0f;
 
             GameObject fireParticle =
                 Instantiate(temp_FireParticle, muzzle.transform.position, muzzle.transform.rotation);
-            fireParticle.transform.parent = _camera.transform;
+            fireParticle.transform.parent = currentWeapon.transform;
 
             GameManager.Instance.gold -= currentGunProperty.cost;
 
+            RecoilAnim();
+            
             RaycastHit hit;
             // Create a ray that goes through the center of the screen
             Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
@@ -75,16 +80,17 @@ public class PlayerMovement : MonoBehaviour
                 Instantiate(temp_Particle, hit.point, Quaternion.identity);
                 if (hit.transform.CompareTag("Enemy"))
                 {
-                    Debug.Log("hit name: " + hit.transform.name); // Output the name of the object we hit
                     Health health = hit.transform.GetComponent<Health>();
                     if (health != null)
                         health.Damage(currentGunProperty.damage);
                 }
-
-                // Here you can implement the effects of the shooting, for example:
-                // hit.transform.gameObject.GetComponent<HealthSystem>()?.TakeDamage(damageAmount);
             }
         }
+    }
+
+    void RecoilAnim()
+    {
+        currentWeapon.transform.DOLocalMoveZ(currentWeapon.transform.localPosition.z-currentGunProperty.recoilDistance, currentGunProperty.delay*0.25f, false).SetEase(Ease.OutCirc).SetLoops(2, LoopType.Yoyo);
     }
 
     void Movement()
