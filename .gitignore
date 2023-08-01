@@ -70,3 +70,4 @@ crashlytics-build.properties
 # Temporary auto-generated Android Assets
 /[Aa]ssets/[Ss]treamingAssets/aa.meta
 /[Aa]ssets/[Ss]treamingAssets/aa/*
+Assets/01. Scenes/MAP/Library/PackageCache/com.unity.burst@1.8.2/.Runtime/libburst-llvm-14.dylib
