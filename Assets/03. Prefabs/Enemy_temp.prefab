@@ -113,3 +113,4 @@ MonoBehaviour:
   health: 3
   deathEffect: {fileID: 8255215019295333937, guid: 139c09de669d89546999f577551dd885,
     type: 3}
+  dropGold: 50
