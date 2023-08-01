@@ -6,11 +6,16 @@ using UnityEngine.AI;
 public class EnemyCtrl : MonoBehaviour
 {
     //목적지
-    public Transform target;
+    private Transform target;
+    private float Hp;
 
-    public GameObject bullet;
+    public Transform bullet;
+    public Transform atk_point;
+    private float power = 50.0f;
     
-    NavMeshAgent agent;
+    private NavMeshAgent agent;
+    private float elapsed_time = 0.0f;
+    private float fire_interval = 2.0f;
 
     // public Animator anim;
 
@@ -31,11 +36,18 @@ public class EnemyCtrl : MonoBehaviour
         state = State.Idle;
 
         agent = GetComponent<NavMeshAgent>();
+        // anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
+        // hp가 0이하면 즉시 사망
+        if (Hp <= 0)
+        {
+            state = State.Dead;
+        }
+        
         switch (state)
         {
             case State.Idle:
@@ -55,12 +67,20 @@ public class EnemyCtrl : MonoBehaviour
    
     private void UpdateAttack()
     {
+        // 멈추기
         agent.speed = 0;
         float distance = Vector3.Distance(transform.position, target.transform.position);
         
         // 플레이어 공격
-        Instantiate(bullet, transform.position, transform.rotation);
+        elapsed_time += Time.deltaTime;
+        Vector3 fwd = transform.TransformDirection(Vector3.forward);
         
+        if (elapsed_time > fire_interval)
+        {
+            Transform enemyBullet = Instantiate(bullet, atk_point.transform.position, Quaternion.identity);
+            enemyBullet.GetComponent<Rigidbody>().AddForce(fwd * power);
+            elapsed_time = 0.0f;
+        }
         
         // 다시 거리가 멀어지면 이동상태로 전환
         if (distance > 15)
@@ -91,7 +111,7 @@ public class EnemyCtrl : MonoBehaviour
         agent.speed = 0;
         //생성될때 목적지(Player)를 찿는다.
         target = GameObject.Find("Player").transform;
-        //target을 찾으면 Run상태로 전이하고 싶다.
+        //target을 찾으면 Run상태로 변경
         if (target != null)
         {
             state = State.Run;
@@ -102,7 +122,9 @@ public class EnemyCtrl : MonoBehaviour
 
     private void UpdateDead()
     {
-        // 애니메이션을 dead로 바꾸고
+        // 죽은 애니메이션을 실행 후
+        
+        // 삭제
         Destroy(this.gameObject, 2.0f);
     }
 }
