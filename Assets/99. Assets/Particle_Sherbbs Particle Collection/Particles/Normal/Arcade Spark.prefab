@@ -4892,6 +4892,7 @@ GameObject:
   m_Component:
   - component: {fileID: 3302442364004722508}
   - component: {fileID: 3335758305923339409}
+  - component: {fileID: -2027049293717872841}
   - component: {fileID: 3302442364004722509}
   - component: {fileID: 3302442364004722510}
   m_Layer: 0
@@ -4932,6 +4933,19 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   scaleFactor: 0.2
+--- !u!114 &-2027049293717872841
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3302442364004722511}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e2451b19ecc8a434c9d3c83ebcf42ca5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  killTime: 2
 --- !u!198 &3302442364004722509
 ParticleSystem:
   m_ObjectHideFlags: 0
