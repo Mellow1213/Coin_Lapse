@@ -7,7 +7,7 @@ public class EnemyCtrl : MonoBehaviour
 {
     //목적지
     private Transform target;
-    private float Hp;
+    private float Hp = 50.0f;
 
     public Transform bullet;
     public Transform atk_point;
@@ -123,6 +123,7 @@ public class EnemyCtrl : MonoBehaviour
     private void UpdateDead()
     {
         // 죽은 애니메이션을 실행 후
+        
         
         // 삭제
         Destroy(this.gameObject, 2.0f);
