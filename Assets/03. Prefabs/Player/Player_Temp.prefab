@@ -164,8 +164,8 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   moveSpeed: 0
-  walkSpeed: 2
-  runSpeed: 5
+  walkSpeed: 4
+  runSpeed: 7
   jumpPower: 2
   isJumping: 0
   range: 100
