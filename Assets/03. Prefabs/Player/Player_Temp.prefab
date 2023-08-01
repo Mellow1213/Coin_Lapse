@@ -168,8 +168,10 @@ MonoBehaviour:
   isJumping: 0
   range: 100
   fireDelay: 0.1
-  temp_Particle: {fileID: 0}
-  temp_FireParticle: {fileID: 0}
+  temp_Particle: {fileID: 524362925323473342, guid: f23ca344d22b7d84b848fb882e92bf51,
+    type: 3}
+  temp_FireParticle: {fileID: 8856629437242833163, guid: fca4c80c52330524cbd4309c118af89c,
+    type: 3}
   muzzle: {fileID: 6762530061256581477}
   gun: {fileID: 49730428132049648}
   currentWeapon: {fileID: 0}
