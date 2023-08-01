@@ -7,25 +7,23 @@ public class EnemyCtrl : MonoBehaviour
 {
     //목적지
     private Transform target;
-    private float Hp = 50.0f;
 
     public Transform bullet;
     public Transform atk_point;
     private float power = 50.0f;
+    private bool isShoot;
     
     private NavMeshAgent agent;
-    private float elapsed_time = 0.0f;
-    private float fire_interval = 2.0f;
+    private Animator anim;
 
-    // public Animator anim;
+    public GameObject[] secretObjs;
 
     //열거형으로 정해진 상태값을 사용
     enum State
     {
         Idle,
         Run,
-        Attack,
-        Dead
+        Attack
     }
     //상태 처리
     State state;
@@ -36,18 +34,12 @@ public class EnemyCtrl : MonoBehaviour
         state = State.Idle;
 
         agent = GetComponent<NavMeshAgent>();
-        // anim = GetComponent<Animator>();
+        anim = GetComponent<Animator>();
     }
 
     // Update is called once per frame
     void Update()
     {
-        // hp가 0이하면 즉시 사망
-        if (Hp <= 0)
-        {
-            state = State.Dead;
-        }
-        
         switch (state)
         {
             case State.Idle:
@@ -59,9 +51,6 @@ public class EnemyCtrl : MonoBehaviour
             case State.Attack:
                 UpdateAttack();
                 break;
-            case State.Dead:
-                UpdateDead();
-                break;
         }
     }
    
@@ -69,37 +58,44 @@ public class EnemyCtrl : MonoBehaviour
     {
         // 멈추기
         agent.speed = 0;
+        anim.SetBool("Run", false);
         float distance = Vector3.Distance(transform.position, target.transform.position);
         
         // 플레이어 공격
-        elapsed_time += Time.deltaTime;
         Vector3 fwd = transform.TransformDirection(Vector3.forward);
-        
-        if (elapsed_time > fire_interval)
+        if (!isShoot)
         {
-            Transform enemyBullet = Instantiate(bullet, atk_point.transform.position, Quaternion.identity);
-            enemyBullet.GetComponent<Rigidbody>().AddForce(fwd * power);
-            elapsed_time = 0.0f;
+            StartCoroutine(Attack(fwd));
         }
-        
+
         // 다시 거리가 멀어지면 이동상태로 전환
-        if (distance > 15)
+        if (distance > 10)
         {
             state = State.Run;
-            // anim.SetTrigger("Run");
         }
+    }
+
+    IEnumerator Attack(Vector3 dir)
+    {
+        isShoot = true;
+        anim.SetTrigger("Attack");
+        yield return new WaitForSeconds(0.2f);
+        Transform enemyBullet = Instantiate(bullet, atk_point.transform.position, Quaternion.identity); 
+        enemyBullet.GetComponent<Rigidbody>().AddForce(dir * power);
+        yield return new WaitForSeconds(2.0f);
+        isShoot = false;
     }
 
     private void UpdateRun()
     {
         //남은 거리가 15미터라면 공격한다.
         float distance = Vector3.Distance(transform.position, target.transform.position);
-        if (distance <= 15)
+        if (distance <= 10)
         {
             state = State.Attack;
-            // anim.SetTrigger("Attack");
         }
-
+        // 런 애니메이션 실행
+        anim.SetBool("Run", true);
         //타겟 방향으로 이동하다가
         agent.speed = 3.5f;
         //요원에게 목적지를 알려준다.
@@ -115,17 +111,6 @@ public class EnemyCtrl : MonoBehaviour
         if (target != null)
         {
             state = State.Run;
-            //이렇게 state값을 바꿨다고 animation까지 바뀔까? no! 동기화를 해줘야한다.
-            //anim.SetTrigger("Run");
         }
-    }
-
-    private void UpdateDead()
-    {
-        // 죽은 애니메이션을 실행 후
-        
-        
-        // 삭제
-        Destroy(this.gameObject, 2.0f);
     }
 }
