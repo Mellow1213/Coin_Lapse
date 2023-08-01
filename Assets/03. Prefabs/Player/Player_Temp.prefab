@@ -163,8 +163,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 96b23ff45a4f94c40a8e3f3b1aad6ce3, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  moveSpeed: 3
-  jumpPower: 10
+  moveSpeed: 0
+  walkSpeed: 2
+  runSpeed: 5
+  jumpPower: 2
   isJumping: 0
   range: 100
   fireDelay: 0.1

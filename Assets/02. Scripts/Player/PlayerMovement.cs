@@ -6,6 +6,8 @@ using UnityEngine.Serialization;
 public class PlayerMovement : MonoBehaviour
 {
     public float moveSpeed;
+    public float walkSpeed;
+    public float runSpeed;
     public float jumpPower;
     public bool isJumping = false;
     
@@ -96,13 +98,14 @@ public class PlayerMovement : MonoBehaviour
         yVelocity += gravity * Time.deltaTime / 1.3f;
         dir.y = yVelocity;
 
-        characterController.Move(dir * moveSpeed * Time.deltaTime);
 
         if (Input.GetKey(KeyCode.W) && Input.GetKey(KeyCode.LeftShift))
-            moveSpeed = 20;
+            moveSpeed = runSpeed;
         else
-            moveSpeed = 11;
+            moveSpeed = walkSpeed;
 
+        characterController.Move(dir * (moveSpeed * Time.deltaTime));
+        
         if (characterController.collisionFlags == CollisionFlags.Below)
         {
             yVelocity = 0;
