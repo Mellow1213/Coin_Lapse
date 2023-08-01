@@ -10,7 +10,7 @@ public class PlayerMovement : MonoBehaviour
     public float runSpeed;
     public float jumpPower;
     public bool isJumping = false;
-    
+
     CharacterController characterController;
 
 
@@ -27,7 +27,7 @@ public class PlayerMovement : MonoBehaviour
     public GameObject gun;
     [SerializeField] private GameObject currentWeapon;
     private GunProperty currentGunProperty;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -54,21 +54,22 @@ public class PlayerMovement : MonoBehaviour
         {
             delayTimer += Time.deltaTime;
         }
-        
-        
+
+
         if (Input.GetMouseButton(0) && delayTimer >= fireDelay && GameManager.Instance.gold >= 0)
         {
             delayTimer = 0f;
-            
-            GameObject fireParticle = Instantiate(temp_FireParticle, muzzle.transform.position, muzzle.transform.rotation);
+
+            GameObject fireParticle =
+                Instantiate(temp_FireParticle, muzzle.transform.position, muzzle.transform.rotation);
             fireParticle.transform.parent = _camera.transform;
-            
+
             GameManager.Instance.gold -= currentGunProperty.cost;
-            
-            RaycastHit hit; 
+
+            RaycastHit hit;
             // Create a ray that goes through the center of the screen
-            Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width/2, Screen.height/2));
-            
+            Ray ray = Camera.main.ScreenPointToRay(new Vector3(Screen.width / 2, Screen.height / 2));
+
             if (Physics.Raycast(ray, out hit, range))
             {
                 Instantiate(temp_Particle, hit.point, Quaternion.identity);
@@ -76,16 +77,16 @@ public class PlayerMovement : MonoBehaviour
                 {
                     Debug.Log("hit name: " + hit.transform.name); // Output the name of the object we hit
                     Health health = hit.transform.GetComponent<Health>();
-                    if(health != null)
+                    if (health != null)
                         health.Damage(currentGunProperty.damage);
                 }
-                
+
                 // Here you can implement the effects of the shooting, for example:
                 // hit.transform.gameObject.GetComponent<HealthSystem>()?.TakeDamage(damageAmount);
             }
         }
     }
-    
+
     void Movement()
     {
         float h = Input.GetAxis("Horizontal");
@@ -105,11 +106,11 @@ public class PlayerMovement : MonoBehaviour
             moveSpeed = walkSpeed;
 
         characterController.Move(dir * (moveSpeed * Time.deltaTime));
-        
+
         if (characterController.collisionFlags == CollisionFlags.Below)
         {
             yVelocity = 0;
-            if(isJumping)
+            if (isJumping)
                 isJumping = false;
         }
 
@@ -119,6 +120,4 @@ public class PlayerMovement : MonoBehaviour
             isJumping = true;
         }
     }
-
-    
 }
