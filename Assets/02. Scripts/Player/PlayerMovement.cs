@@ -20,7 +20,6 @@ public class PlayerMovement : MonoBehaviour
     private float delayTimer = 0f;
 
     public GameObject temp_Particle;
-    public GameObject temp_FireParticle;
 
     public GameObject muzzle;
 
@@ -28,6 +27,7 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] private GameObject currentWeapon;
     private GunProperty currentGunProperty;
 
+    public ParticleSystem muzzleFlashParticle;
     public ParticleSystem bulletShellParticle;
 
     // Start is called before the first frame update
@@ -63,9 +63,6 @@ public class PlayerMovement : MonoBehaviour
         {
             delayTimer = 0f;
 
-            GameObject fireParticle =
-                Instantiate(temp_FireParticle, muzzle.transform.position, muzzle.transform.rotation);
-            fireParticle.transform.parent = currentWeapon.transform;
 
             GameManager.Instance.gold -= currentGunProperty.cost;
 
@@ -90,19 +87,27 @@ public class PlayerMovement : MonoBehaviour
 
         if (Input.GetMouseButton(0))
         {
-            var emissionModule = bulletShellParticle.emission;
-            emissionModule.enabled = true;
+            var bulletModule = bulletShellParticle.emission;
+            bulletModule.enabled = true;
+            
+            var flashModule = muzzleFlashParticle.emission;
+            flashModule.enabled = true;
+            
         }
         else
         {
-            var emissionModule = bulletShellParticle.emission;
-            emissionModule.enabled = false;
+            var bulletModule = bulletShellParticle.emission;
+            bulletModule.enabled = false;
+            
+            
+            var flashModule = muzzleFlashParticle.emission;
+            flashModule.enabled = false;
         }
     }
 
     void RecoilAnim()
     {
-        currentWeapon.transform.DOLocalMoveZ(currentWeapon.transform.localPosition.z-currentGunProperty.recoilDistance, currentGunProperty.delay*0.25f, false).SetEase(Ease.OutCirc).SetLoops(2, LoopType.Yoyo);
+        currentWeapon.transform.DOLocalMoveZ(currentWeapon.transform.localPosition.z-currentGunProperty.recoilDistance, currentGunProperty.delay*0.5f, false).SetEase(Ease.OutCirc).SetLoops(2, LoopType.Yoyo);
     }
 
     void Movement()
