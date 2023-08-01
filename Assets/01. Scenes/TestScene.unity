@@ -5690,6 +5690,7 @@ MonoBehaviour:
   muzzle: {fileID: 6262339783471477001}
   gunSlot: {fileID: 1421343311}
   currentWeapon: {fileID: 0}
+  currentFireDelay: 0
   muzzleFlashParticle: {fileID: 262269943}
   bulletShellParticle: {fileID: 1459083680}
 --- !u!143 &922040692
@@ -6231,7 +6232,7 @@ PrefabInstance:
       objectReference: {fileID: 0}
     - target: {fileID: 19876208, guid: 8698f59a8ea9a0c449a001968fa1db7f, type: 3}
       propertyPath: EmissionModule.enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 19876208, guid: 8698f59a8ea9a0c449a001968fa1db7f, type: 3}
       propertyPath: InitialModule.startSize.scalar
