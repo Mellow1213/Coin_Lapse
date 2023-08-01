@@ -149,6 +149,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   damage: 0.5
   delay: 0.1
+  cost: 1
 --- !u!33 &5734801247398768667
 MeshFilter:
   m_ObjectHideFlags: 0

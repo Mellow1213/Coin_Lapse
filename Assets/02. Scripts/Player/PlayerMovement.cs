@@ -24,6 +24,7 @@ public class PlayerMovement : MonoBehaviour
 
     public GameObject gun;
     [SerializeField] private GameObject currentWeapon;
+    private GunProperty currentGunProperty;
     
     // Start is called before the first frame update
     void Start()
@@ -31,6 +32,7 @@ public class PlayerMovement : MonoBehaviour
         _camera = Camera.main;
         characterController = GetComponent<CharacterController>();
         currentWeapon = gun.transform.GetChild(0).GetComponent<Transform>().gameObject;
+        currentGunProperty = currentWeapon.GetComponent<GunProperty>();
     }
 
     float gravity = -3.8f;
@@ -52,12 +54,14 @@ public class PlayerMovement : MonoBehaviour
         }
         
         
-        if (Input.GetMouseButton(0) && delayTimer >= fireDelay)
+        if (Input.GetMouseButton(0) && delayTimer >= fireDelay && GameManager.Instance.gold >= 0)
         {
             delayTimer = 0f;
             
             GameObject fireParticle = Instantiate(temp_FireParticle, muzzle.transform.position, muzzle.transform.rotation);
             fireParticle.transform.parent = _camera.transform;
+            
+            GameManager.Instance.gold -= currentGunProperty.cost;
             
             RaycastHit hit; 
             // Create a ray that goes through the center of the screen
@@ -71,7 +75,7 @@ public class PlayerMovement : MonoBehaviour
                     Debug.Log("hit name: " + hit.transform.name); // Output the name of the object we hit
                     Health health = hit.transform.GetComponent<Health>();
                     if(health != null)
-                        health.Damage(currentWeapon.GetComponent<GunProperty>().damage);
+                        health.Damage(currentGunProperty.damage);
                 }
                 
                 // Here you can implement the effects of the shooting, for example:

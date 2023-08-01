@@ -1,3 +1,4 @@
+using System;
 using UnityEngine;
 
 public class GameManager : MonoBehaviour
@@ -20,6 +21,11 @@ public class GameManager : MonoBehaviour
             // 씬이 바뀌어도 파괴되지 않게 설정
             DontDestroyOnLoad(gameObject);
         }
+    }
+
+    private void Update()
+    {
+        Debug.Log("gold = " + gold);
     }
 
     public int gold = 0;
