@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 using DG.Tweening;
+using TMPro;    
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -28,9 +29,13 @@ public class PlayerMovement : MonoBehaviour
     private GunProperty currentGunProperty;
 
     [SerializeField] private float currentFireDelay;
+    [SerializeField] private float currentDamage;
 
     public ParticleSystem muzzleFlashParticle;
     public ParticleSystem bulletShellParticle;
+
+    public TextMeshProUGUI fireRateText;
+    public TextMeshProUGUI DamageText;
 
     // Start is called before the first frame update
     void Start()
@@ -41,6 +46,7 @@ public class PlayerMovement : MonoBehaviour
         currentGunProperty = currentWeapon.GetComponent<GunProperty>();
 
         currentFireDelay = currentGunProperty.delay;
+        currentDamage = currentGunProperty.damage;
     }
 
     float gravity = -3.8f;
@@ -58,7 +64,11 @@ public class PlayerMovement : MonoBehaviour
     void GoldUpgrade()
     {
         currentFireDelay = Mathf.Clamp(currentGunProperty.delay / (GameManager.Instance.gold * 0.005f), 0.001f, 0.15f);
+        currentDamage = Mathf.Clamp(currentGunProperty.damage + GameManager.Instance.gold * 0.001f, 1f, 10f);
+
         Debug.Log("currentFireDelay = " + currentFireDelay);
+        fireRateText.text = "CurrentFireDelay\n" + currentFireDelay.ToString("F3");
+        DamageText.text = "CurrentDamage\n" + currentDamage.ToString("F2");
 
         if (currentFireDelay < 0.025f)
         {
@@ -87,7 +97,6 @@ public class PlayerMovement : MonoBehaviour
         {
             var emissionModule = bulletShellParticle.emission;
             emissionModule.rateOverTime = 2;
-            
         }
     }
 
@@ -119,7 +128,7 @@ public class PlayerMovement : MonoBehaviour
                 {
                     Health health = hit.transform.GetComponent<Health>();
                     if (health != null)
-                        health.Damage(currentGunProperty.damage);
+                        health.Damage(currentDamage);
                 }
             }
         }
