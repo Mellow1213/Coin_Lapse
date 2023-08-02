@@ -18,6 +18,8 @@ public class SpawnEnemy : MonoBehaviour
     private float timer = 0;
 
 
+    public bool isPolice;
+
     // Start is called before the first frame update
     void Start()
     {
@@ -40,7 +42,7 @@ public class SpawnEnemy : MonoBehaviour
         if (timer >= 2f)
         {
             timer = 0f;
-            if (gameObject.CompareTag("Police"))
+            if (isPolice)
             {
                 int rnd = Random.Range(0, 2);
                 Instantiate(Enemies[rnd], sp_Point.position, Quaternion.identity);

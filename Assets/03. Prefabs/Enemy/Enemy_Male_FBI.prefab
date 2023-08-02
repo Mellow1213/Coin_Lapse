@@ -2592,7 +2592,7 @@ CapsuleCollider:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2981011834333750928}
   m_Material: {fileID: 0}
-  m_IsTrigger: 0
+  m_IsTrigger: 1
   m_Enabled: 1
   m_Radius: 0.5
   m_Height: 1.9710314
@@ -2610,7 +2610,7 @@ Rigidbody:
   m_Drag: 0
   m_AngularDrag: 0.05
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 0
   m_CollisionDetection: 0
@@ -2666,9 +2666,10 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 60fc9617fc525af488952eae811f9c8f, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  health: 0
-  deathEffect: {fileID: 0}
-  dropGold: 0
+  health: 7
+  deathEffect: {fileID: 3302442364004722511, guid: 10434d6bf3af98b46a88ab696f543ee3,
+    type: 3}
+  dropGold: 10
 --- !u!1 &2981011834333751374
 GameObject:
   m_ObjectHideFlags: 0
