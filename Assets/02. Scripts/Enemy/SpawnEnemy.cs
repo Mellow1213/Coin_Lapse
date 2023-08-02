@@ -1,6 +1,9 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class SpawnEnemy : MonoBehaviour
 {
@@ -9,55 +12,43 @@ public class SpawnEnemy : MonoBehaviour
     public GameObject[] Enemies;
     public Transform sp_Point;
 
-    private bool isDestroy;
-    private float hp;
-    
+    public bool isStartSpawn;
+
     // Start is called before the first frame update
     void Start()
     {
-        if (gameObject.CompareTag("Police"))
-        {
-            count = Random.Range(2, 7);
-        }
-        else
-        {
-            count = Random.Range(8, 13);
-        }
+        isStartSpawn = true;
     }
 
     // Update is called once per frame
     void Update()
     {
-        // 차가 파괴되지 않았다면 계속 생성
-        if (!isDestroy)
+        if (!isStartSpawn)
         {
-            if (count < 7)
-            {
-                StartCoroutine(SpawnPolice(count));
-            }
-            else
-            {
-                StartCoroutine(SpawnSwat(count));
-            }
+            StartCoroutine(Spawn());
         }
     }
 
-    IEnumerator SpawnPolice(int a)
+    IEnumerator Spawn()
     {
-        for (int i = 1; i <= a; i++)
+        isStartSpawn = true;
+        if (gameObject.CompareTag("Police"))
         {
             int rnd = Random.Range(0, 2);
             Instantiate(Enemies[rnd], sp_Point.position, Quaternion.identity);
-            yield return new WaitForSeconds(0.5f);
         }
-    }
-    
-    IEnumerator SpawnSwat(int a)
-    {
-        for (int i = 1; i <= a; i++)
+        else
         {
             Instantiate(Enemies[2], sp_Point.position, Quaternion.identity);
-            yield return new WaitForSeconds(0.5f);
         }
+        
+        yield return new WaitForSeconds(1.0f);
+        isStartSpawn = false;
+    }
+
+    private void OnCollisionEnter(Collision other)
+    {
+        // 임시 시작용 코드
+        isStartSpawn = false;
     }
 }
