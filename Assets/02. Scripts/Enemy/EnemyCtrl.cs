@@ -104,6 +104,8 @@ public class EnemyCtrl : MonoBehaviour
         agent.speed = 3.5f;
         //요원에게 목적지를 알려준다.
         agent.destination = target.transform.position;
+        //타켓을 정면으로 바라본다.
+        transform.LookAt(target);
     }
 
     private void UpdateIdle()
