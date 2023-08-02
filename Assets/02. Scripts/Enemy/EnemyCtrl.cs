@@ -33,6 +33,10 @@ public class EnemyCtrl : MonoBehaviour
         //생성시 상태를 Idle로 한다.
         state = State.Idle;
 
+        // 랜덤으로 숨겨진 오브젝트를 활성화
+        int rnd = Random.Range(0, secretObjs.Length);
+        secretObjs[rnd].SetActive(true);
+        
         agent = GetComponent<NavMeshAgent>();
         anim = GetComponent<Animator>();
     }
@@ -100,6 +104,8 @@ public class EnemyCtrl : MonoBehaviour
         agent.speed = 3.5f;
         //요원에게 목적지를 알려준다.
         agent.destination = target.transform.position;
+        //타켓을 정면으로 바라본다.
+        transform.LookAt(target);
     }
 
     private void UpdateIdle()
