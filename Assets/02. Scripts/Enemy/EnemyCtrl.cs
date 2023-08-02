@@ -10,7 +10,7 @@ public class EnemyCtrl : MonoBehaviour
 
     public Transform bullet;
     public Transform atk_point;
-    private float power = 50.0f;
+    private float power = 150.0f;
     private bool isShoot;
     
     private NavMeshAgent agent;

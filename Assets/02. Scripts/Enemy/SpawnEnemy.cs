@@ -15,8 +15,9 @@ public class SpawnEnemy : MonoBehaviour
     public Transform endPoint;
 
     private bool startSpawn = false;
-    private float timer = 0;
+    private float timer = 99;
 
+    public float spawnTime;
 
     public bool isPolice;
 
@@ -39,7 +40,7 @@ public class SpawnEnemy : MonoBehaviour
 
     void SpawnStart()
     {
-        if (timer >= 2f)
+        if (timer >= spawnTime)
         {
             timer = 0f;
             if (isPolice)

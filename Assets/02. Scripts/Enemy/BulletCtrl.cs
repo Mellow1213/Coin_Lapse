@@ -10,6 +10,16 @@ public class BulletCtrl : MonoBehaviour
     void Start()
     {
         Destroy(this.gameObject, 3.0f);
+        transform.LookAt(GameObject.Find("Player").transform); 
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.CompareTag("Player"))
+        {
+            GameManager.Instance.gold -= 3;
+        }
+        
+        Destroy(gameObject);
     }
 
     // Update is called once per frame
@@ -18,8 +28,4 @@ public class BulletCtrl : MonoBehaviour
         
     }
 
-    private void OnCollisionEnter(Collision other)
-    {
-        // 플레이어와 부딫히면 플레이어의 hp를 깎는다
-    }
 }
