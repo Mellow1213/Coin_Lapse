@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 using DG.Tweening;
-using TMPro;    
+using TMPro;
+using Unity.VisualScripting;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -29,7 +30,7 @@ public class PlayerMovement : MonoBehaviour
     private GunProperty currentGunProperty;
 
     [SerializeField] private float currentFireDelay;
-    [SerializeField] private float currentDamage;
+    public float currentDamage;
 
     public ParticleSystem muzzleFlashParticle;
     public ParticleSystem bulletShellParticle;
@@ -37,6 +38,11 @@ public class PlayerMovement : MonoBehaviour
     public TextMeshProUGUI fireRateText;
     public TextMeshProUGUI DamageText;
 
+    
+    public GameObject floatingDamage;
+
+
+    public TextMeshProUGUI gameOverText;
     // Start is called before the first frame update
     void Start()
     {
@@ -53,12 +59,22 @@ public class PlayerMovement : MonoBehaviour
     float yVelocity = 0;
     private Camera _camera;
 
+    private bool isDeath = false;
+
     // Update is called once per frame
     void Update()
     {
         Movement();
         Fire();
         GoldUpgrade();
+
+        if (GameManager.Instance.gold <= 0 && !isDeath)
+        {
+            isDeath = true;
+            //gameOverText.D = "Game Over";
+            Time.timeScale = 0.05f;
+        }
+            
     }
 
     void GoldUpgrade()
@@ -123,6 +139,7 @@ public class PlayerMovement : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, range))
             {
+                Instantiate(floatingDamage, hit.point, Quaternion.identity);
                 Instantiate(temp_Particle, hit.point, Quaternion.identity);
                 if (hit.transform.CompareTag("Enemy"))
                 {
@@ -202,4 +219,5 @@ public class PlayerMovement : MonoBehaviour
             isJumping = true;
         }
     }
+    
 }
