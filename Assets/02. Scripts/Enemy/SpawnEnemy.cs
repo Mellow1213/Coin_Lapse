@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using Random = UnityEngine.Random;
+using DG.Tweening;
 
 public class SpawnEnemy : MonoBehaviour
 {
@@ -11,44 +12,50 @@ public class SpawnEnemy : MonoBehaviour
 
     public GameObject[] Enemies;
     public Transform sp_Point;
+    public Transform endPoint;
 
-    public bool isStartSpawn;
+    private bool startSpawn = false;
+    private float timer = 0;
+
 
     // Start is called before the first frame update
     void Start()
     {
-        isStartSpawn = true;
+        transform.LookAt(endPoint);
+        StartCoroutine(Spawn());
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (!isStartSpawn)
+        if (startSpawn)
         {
-            StartCoroutine(Spawn());
+            timer += Time.deltaTime;
+            SpawnStart();
+        }
+    }
+
+    void SpawnStart()
+    {
+        if (timer >= 2f)
+        {
+            timer = 0f;
+            if (gameObject.CompareTag("Police"))
+            {
+                int rnd = Random.Range(0, 2);
+                Instantiate(Enemies[rnd], sp_Point.position, Quaternion.identity);
+            }
+            else
+            {
+                Instantiate(Enemies[2], sp_Point.position, Quaternion.identity);
+            }
         }
     }
 
     IEnumerator Spawn()
     {
-        isStartSpawn = true;
-        if (gameObject.CompareTag("Police"))
-        {
-            int rnd = Random.Range(0, 2);
-            Instantiate(Enemies[rnd], sp_Point.position, Quaternion.identity);
-        }
-        else
-        {
-            Instantiate(Enemies[2], sp_Point.position, Quaternion.identity);
-        }
-        
-        yield return new WaitForSeconds(1.0f);
-        isStartSpawn = false;
-    }
-
-    private void OnCollisionEnter(Collision other)
-    {
-        // 임시 시작용 코드
-        isStartSpawn = false;
+        transform.DOMove(endPoint.position, 5f);
+        yield return new WaitForSeconds(5f);
+        startSpawn = true;
     }
 }
