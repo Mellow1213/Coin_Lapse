@@ -71,10 +71,15 @@ public class PlayerMovement : MonoBehaviour
         if (GameManager.Instance.gold <= 0 && !isDeath)
         {
             isDeath = true;
-            //gameOverText.D = "Game Over";
-            Time.timeScale = 0.05f;
+            StartCoroutine(DeathText());
         }
             
+    }
+    IEnumerator DeathText(){
+        
+        gameOverText.DOText("Game Over", 4f);
+        yield return new WaitForSeconds(4f);
+        Time.timeScale = 0.005f;
     }
 
     void GoldUpgrade()
