@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.Serialization;
 using DG.Tweening;
+using TMPro;
+using Unity.VisualScripting;
 
 public class PlayerMovement : MonoBehaviour
 {
@@ -28,10 +30,19 @@ public class PlayerMovement : MonoBehaviour
     private GunProperty currentGunProperty;
 
     [SerializeField] private float currentFireDelay;
+    public float currentDamage;
 
     public ParticleSystem muzzleFlashParticle;
     public ParticleSystem bulletShellParticle;
 
+    public TextMeshProUGUI fireRateText;
+    public TextMeshProUGUI DamageText;
+
+    
+    public GameObject floatingDamage;
+
+
+    public TextMeshProUGUI gameOverText;
     // Start is called before the first frame update
     void Start()
     {
@@ -41,11 +52,14 @@ public class PlayerMovement : MonoBehaviour
         currentGunProperty = currentWeapon.GetComponent<GunProperty>();
 
         currentFireDelay = currentGunProperty.delay;
+        currentDamage = currentGunProperty.damage;
     }
 
     float gravity = -3.8f;
     float yVelocity = 0;
     private Camera _camera;
+
+    private bool isDeath = false;
 
     // Update is called once per frame
     void Update()
@@ -53,12 +67,29 @@ public class PlayerMovement : MonoBehaviour
         Movement();
         Fire();
         GoldUpgrade();
+
+        if (GameManager.Instance.gold <= 0 && !isDeath)
+        {
+            isDeath = true;
+            StartCoroutine(DeathText());
+        }
+            
+    }
+    IEnumerator DeathText(){
+        
+        gameOverText.DOText("Game Over", 4f);
+        yield return new WaitForSeconds(4f);
+        Time.timeScale = 0.005f;
     }
 
     void GoldUpgrade()
     {
         currentFireDelay = Mathf.Clamp(currentGunProperty.delay / (GameManager.Instance.gold * 0.005f), 0.001f, 0.15f);
+        currentDamage = Mathf.Clamp(currentGunProperty.damage + GameManager.Instance.gold * 0.001f, 1f, 10f);
+
         Debug.Log("currentFireDelay = " + currentFireDelay);
+        fireRateText.text = "CurrentFireDelay\n" + currentFireDelay.ToString("F3");
+        DamageText.text = "CurrentDamage\n" + currentDamage.ToString("F2");
 
         if (currentFireDelay < 0.025f)
         {
@@ -87,7 +118,6 @@ public class PlayerMovement : MonoBehaviour
         {
             var emissionModule = bulletShellParticle.emission;
             emissionModule.rateOverTime = 2;
-            
         }
     }
 
@@ -114,12 +144,13 @@ public class PlayerMovement : MonoBehaviour
 
             if (Physics.Raycast(ray, out hit, range))
             {
+                Instantiate(floatingDamage, hit.point, Quaternion.identity);
                 Instantiate(temp_Particle, hit.point, Quaternion.identity);
                 if (hit.transform.CompareTag("Enemy"))
                 {
                     Health health = hit.transform.GetComponent<Health>();
                     if (health != null)
-                        health.Damage(currentGunProperty.damage);
+                        health.Damage(currentDamage);
                 }
             }
         }
@@ -193,4 +224,5 @@ public class PlayerMovement : MonoBehaviour
             isJumping = true;
         }
     }
+    
 }
